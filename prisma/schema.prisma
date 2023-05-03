@@ -6,19 +6,12 @@ generator client {
 }
 
 datasource db {
-    provider = "postgresql"
-    // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("POSTGRES_PRISMA_URL")
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
 
 // Necessary for Next auth
 model Account {
@@ -34,7 +27,7 @@ model Account {
     scope             String?
     id_token          String?  @db.Text
     session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user              StudentUser    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
 }
@@ -44,15 +37,18 @@ model Session {
     sessionToken String   @unique
     userId       String
     expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user         StudentUser     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model User {
+model StudentUser {
     id            String    @id @default(cuid())
-    name          String?
     email         String?   @unique
     emailVerified DateTime?
     image         String?
+    numInfractions Int @default(0)
+    isActive     Boolean @default(true)
+
+    messages      Message[] 
     accounts      Account[]
     sessions      Session[]
 }
@@ -63,4 +59,24 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Teacher {
+  id           String @id @default(cuid())
+  name         String @unique
+  college      String
+  email        String @unique 
+  messages     Message[] @relation("TeacherToMessages")
+  @@index([name, college])
+}
+
+
+model Message {
+    id          String @id @default(cuid())
+    student     StudentUser @relation(fields: [studentId], references: [id])
+    studentId   String
+    teacher     Teacher @relation("TeacherToMessages", fields: [teacherId], references: [id])
+    teacherId   String
+    content     String @db.VarChar()
+    @@index([studentId])
 }
