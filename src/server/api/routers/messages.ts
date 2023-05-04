@@ -2,13 +2,16 @@ import { z } from "zod";
 
 import {
   createTRPCRouter,
-  publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
 
 export const messagesRouter = createTRPCRouter({
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.message.findMany();
+  getStudentMessages: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.message.findMany({
+      where: {
+        studentId: ctx.session.user.id
+      }
+    });
   }),
 
 
