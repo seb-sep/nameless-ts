@@ -7,7 +7,7 @@ import {
 } from "~/server/api/trpc";
 
 export const messagesRouter = createTRPCRouter({
-  getAll: protectedProcedure.query(({ ctx }) => {
+  getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.message.findMany();
   }),
 
