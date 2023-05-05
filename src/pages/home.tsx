@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import { api } from "~/utils/api";
 import { signIn, signOut } from "next-auth/react";
-import { TeacherSearch } from "~/components/TeacherSearch";
+import { TeacherSearch } from "~/components/TeacherSearch"
 
 interface TabProps {
     title: string;

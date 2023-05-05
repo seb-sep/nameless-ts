@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { api } from "~/utils/api";
 
-const TeacherSearch: React.FC = () => {
+export const TeacherSearch: React.FC = () => {
         
     const [searchText, setSearchText] = useState("");
 
@@ -25,5 +25,3 @@ const TeacherSearch: React.FC = () => {
 
     )
 } 
-
-export default TeacherSearch;
