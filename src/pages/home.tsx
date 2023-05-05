@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import type { NextPage } from "next";
 import { useState } from "react";
 
 import { api } from "~/utils/api";
@@ -19,7 +19,7 @@ const Tab: React.FC<TabProps> = ({ title, isActive = false, onClick }) => {
 };
  
 
-export const Home: NextPage = () => {
+const Home: NextPage = () => {
     const [activeTab, setActiveTab] = useState(0);
 
     return (
@@ -33,3 +33,5 @@ export const Home: NextPage = () => {
         </main>
     );
 };
+
+export default Home;
