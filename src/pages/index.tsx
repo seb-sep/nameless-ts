@@ -1,6 +1,7 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
+import type { FormEvent } from "react";
 
 //This will be the login page
 const Landing: NextPage = () => {
@@ -18,8 +19,7 @@ const Landing: NextPage = () => {
             Nameless
           </h1>
           <h6>Give anonymous feedback to your teachers for a better class experience.</h6>
-          <button className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-            onClick={() => void signIn()}>Login/Sign Up</button>
+          <Login />
         </div>
       </main>
     </>
@@ -27,6 +27,28 @@ const Landing: NextPage = () => {
 };
 
 export default Landing;
+
+const Login: React.FC = () => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email") as string;
+    await signIn("email", { email , callbackUrl: "/home"});
+  };
+
+  return (
+    <div>
+      <h1>Login</h1>
+      <form onSubmit={void handleSubmit}>
+        <label>
+          Email:
+          <input type="email" name="email" required />
+        </label>
+        <button type="submit">Send Verification Email</button>
+      </form>
+    </div>
+  );
+};
 
 const AuthShowcase: React.FC = () => {
   const { data: sessionData } = useSession();
