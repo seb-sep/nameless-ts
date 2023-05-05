@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import { api } from "~/utils/api";
 import { signIn, signOut } from "next-auth/react";
+import { TeacherSearch } from "~/components/TeacherSearch";
 
 interface TabProps {
     title: string;
@@ -28,7 +29,7 @@ export const Home: NextPage = () => {
                 <Tab title={"My Messages"} isActive={false} onClick={() => setActiveTab(1)} />
                 <button onClick={() => void signOut({ callbackUrl: '/' })}>Sign out</button>
             </div>
-            {activeTab === 0 && }
+            {activeTab === 0 && <TeacherSearch />}
         </main>
     );
 };
