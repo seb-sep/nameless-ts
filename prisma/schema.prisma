@@ -44,8 +44,6 @@ model Session {
 model StudentUser {
     id            String    @id @default(cuid())
     email         String?   @unique
-    emailVerified DateTime?
-    image         String?
     numInfractions Int @default(0)
     isActive     Boolean @default(true)
 
