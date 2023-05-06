@@ -43,6 +43,23 @@ export const authOptions: NextAuthOptions = {
         id: user.id,
       },
     }),
+    async signIn({ user, account, profile, email, credentials }) {
+      if (account?.provider === "email" && user.email) {
+        const existingUser = await prisma.studentUser.findUnique({
+          where: { email: user.email },
+        });
+
+        if (!existingUser) {
+          await prisma.studentUser.create({
+            data: {
+              email: user.email
+            }
+          })
+        }
+      }
+
+      return true;
+    },
   },
   adapter: PrismaAdapter(prisma),
   providers: [
