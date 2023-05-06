@@ -20,7 +20,7 @@ const Landing: NextPage = () => {
             Nameless
           </h1>
           <h6>Give anonymous feedback to your teachers for a better class experience.</h6>
-          <Login />
+          <button onClick={() => void signIn()}>Sign in with email</button>
         </div>
       </main>
     </>

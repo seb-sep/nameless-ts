@@ -28,7 +28,7 @@ model Account {
     scope             String?
     id_token          String?  @db.Text
     session_state     String?
-    user              StudentUser    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
 }
@@ -38,10 +38,10 @@ model Session {
     sessionToken String   @unique
     userId       String
     expires      DateTime
-    user         StudentUser     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model StudentUser {
+model User {
     id            String    @id @default(cuid())
     email         String?   @unique
     numInfractions Int @default(0)
@@ -72,7 +72,7 @@ model Teacher {
 
 model Message {
     id          String @id @default(cuid())
-    student     StudentUser @relation(fields: [studentId], references: [id])
+    student     User @relation(fields: [studentId], references: [id])
     studentId   String
     teacher     Teacher @relation("TeacherToMessages", fields: [teacherId], references: [id])
     teacherId   String
