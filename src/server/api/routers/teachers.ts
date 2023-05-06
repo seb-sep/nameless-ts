@@ -13,13 +13,14 @@ export const teachersRouter = createTRPCRouter({
         })
     )
     .query(({ ctx, input }) => {
-    return ctx.prisma.teacher.findMany({
+    const teachers = ctx.prisma.teacher.findMany({
         where: {
             name: {
                 search: input.content
             }
         }
     });
+    return teachers;
   }),
 
 
