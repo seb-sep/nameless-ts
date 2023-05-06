@@ -4,7 +4,7 @@ import {
   type NextAuthOptions,
   type DefaultSession,
 } from "next-auth";
-import Email from "next-auth/providers/email";
+import EmailProvider from "next-auth/providers/email";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "~/server/db";
 
@@ -43,7 +43,8 @@ export const authOptions: NextAuthOptions = {
         id: user.id,
       },
     }),
-    async signIn({ user, account, profile, email, credentials }) {
+    /*async signIn({ user, account, profile, email, credentials }) {
+      console.log(user.email);
       if (account?.provider === "email" && user.email) {
         const existingUser = await prisma.studentUser.findUnique({
           where: { email: user.email },
@@ -59,31 +60,23 @@ export const authOptions: NextAuthOptions = {
       }
 
       return true;
-    },
+    },*/
   },
   adapter: PrismaAdapter(prisma),
   providers: [
-    Email({
+    EmailProvider({
       server: {
         host: process.env.EMAIL_SERVER_HOST,
         port: process.env.EMAIL_SERVER_PORT,
         auth: {
-          user: process.env.EMAIL_USERNAME,
-          pass: process.env.EMAIL_PASSWORD,
-        },
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD
+        }
       },
-      from: 'no-reply@example.com',
+      from: process.env.EMAIL_FROM,
     }),
-    /**
-     * ...add more providers here.
-     *
-     * Most other providers require a bit more work than the Discord provider. For example, the
-     * GitHub provider requires you to add the `refresh_token_expires_in` field to the Account
-     * model. Refer to the NextAuth.js docs for the provider you want to use. Example:
-     *
-     * @see https://next-auth.js.org/providers/github
-     */
   ],
+  secret: process.env.NEXTAUTH_SECRET
 };
 
 /**

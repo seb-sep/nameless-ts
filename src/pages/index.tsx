@@ -2,6 +2,7 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { signIn, signOut, useSession } from "next-auth/react";
 import type { FormEvent } from "react";
+import { useState } from "react";
 
 //This will be the login page
 const Landing: NextPage = () => {
@@ -28,21 +29,30 @@ const Landing: NextPage = () => {
 
 export default Landing;
 
+
 const Login: React.FC = () => {
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    console.log("Submitted form");
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email") as string;
-    await signIn("email", { email , callbackUrl: "/home"});
+
+    // Wrap the async call to signIn inside an anonymous arrow function
+    void (async () => {
+      /await signIn("email", { inputValue, callbackUrl: "/home" });
+      //await signIn();
+    })();
   };
 
   return (
     <div>
       <h1>Login</h1>
-      <form onSubmit={void handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <label>
           Email:
-          <input type="email" name="email" required />
+          <input type="email" name="email" onChange={(e) => setInputValue(e.target.value)} />
         </label>
         <button type="submit">Send Verification Email</button>
       </form>
