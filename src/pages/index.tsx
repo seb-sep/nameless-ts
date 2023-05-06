@@ -41,7 +41,7 @@ const Login: React.FC = () => {
 
     // Wrap the async call to signIn inside an anonymous arrow function
     void (async () => {
-      /await signIn("email", { inputValue, callbackUrl: "/home" });
+      await signIn("email", { inputValue, callbackUrl: "/home" });
       //await signIn();
     })();
   };
