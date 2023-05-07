@@ -25,12 +25,13 @@ const Home: NextPage = () => {
     const router = useRouter();
 
     useEffect(() => {
-        if (status === "unauthenticated" || !session) {
+        if (status === "unauthenticated") {
+            console.log("Status unauthed");
             void router.push("/");
         }
     });
 
-    if (status === "authenticated") {
+    if (status === "authenticated" && session) {
         return (
             <main className="w-screen h-screen flex flex-col justify-normal">
                 <div className="w-screen h-2/6 flex flex-row space-between">
