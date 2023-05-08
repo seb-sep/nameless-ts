@@ -1,9 +1,52 @@
 import { z } from "zod";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { TRPCError } from "@trpc/server";
+import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
+import type { SendEmailCommandInput } from "@aws-sdk/client-ses";
 
-import {
-  createTRPCRouter,
-  protectedProcedure,
-} from "~/server/api/trpc";
+
+
+const sendEmail = async (recipient: string, content: string) => {
+  if (!process.env.EMAIL_FROM || !process.env.AWS_ACCESS_KEY || !process.env.AWS_SECRET_KEY) {
+    return {"Error": "Environment variables not set."};
+  }
+  const client = new SESClient({
+    region: process.env.AWS_SERVER_REGION,
+    credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY,
+      secretAccessKey: process.env.AWS_SECRET_KEY
+    }
+  });
+
+  const params: SendEmailCommandInput = {
+    Source: process.env.EMAIL_FROM,
+    Destination: {
+      ToAddresses: [recipient], 
+    },
+    Message: {
+      Subject: {
+        Data: "Student Feedback from Nameless NEU",
+      },
+      Body: {
+        Text: {
+          Data: content,
+        },
+      },
+    },
+  };
+
+  try {
+    console.log("Sending email");
+    const command = new SendEmailCommand(params);
+    const result = client.send(command);
+    console.log("Sent email");
+    return result;
+  } catch (error) {
+    console.error(error);
+    return {"Error": error};
+  }
+};
+
 
 export const messagesRouter = createTRPCRouter({
   getStudentMessages: protectedProcedure.query(({ ctx }) => {
@@ -22,7 +65,8 @@ export const messagesRouter = createTRPCRouter({
               content: z.string(),
           })
       )
-      .mutation(({ ctx, input }) => {
+      .mutation(async ({ ctx, input }) => {
+        //store the message in the database
         const msg = ctx.prisma.message.create({
           data: {
             student: {
@@ -34,6 +78,22 @@ export const messagesRouter = createTRPCRouter({
             content: input.content
           }
         });
+        //Fetch the email address of the teacher
+        const email = await ctx.prisma.teacher.findUnique({
+          where: {
+            id: input.teacherId
+          },
+          select: {
+            email: true,
+          },
+        });
+        if (!email) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Email for teacher ID not found",
+          });
+        }
+        await sendEmail(email.email, input.content);
         return msg;
     }),
 });
