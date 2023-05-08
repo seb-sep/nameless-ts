@@ -7,12 +7,12 @@ import { TeacherSearch } from "~/components/TeacherSearch"
 
 interface TabProps {
     title: string;
-    isActive: boolean; 
     onClick: () => void;
 }
-const Tab: React.FC<TabProps> = ({ title, isActive = false, onClick }) => {
+const Tab: React.FC<TabProps> = ({ title, onClick }) => {
+
     return (
-        <button onClick={onClick} className={isActive ? "underline underline-offset-8" : ""}>
+        <button onClick={onClick} className="underline underline-offset-8">
             {title}
         </button>   
     );
@@ -34,17 +34,16 @@ const Home: NextPage = () => {
     if (status === "authenticated" && session) {
         return (
             <main className="w-screen h-screen flex flex-col justify-normal">
-                <div className="w-screen h-2/6 flex flex-row space-between">
+                <div className="w-screen h-2/6 flex flex-row justify-between">
                     <div className="font-bold">Your Dashboard</div>
                     <div className="flex flex-col justify-evenly">
                         <div>{session.user?.email}</div>
                         <button className="rounded-full border" onClick={() => void signOut({ callbackUrl: '/' })}>Sign out</button>
-
                     </div>
                 </div>
-                <div className="w-screen h-1/6 fixed top-0 left-0 flex flex-row">
-                    <Tab title={"Teacher Search"} isActive={false} onClick={() => setActiveTab(0)} />
-                    <Tab title={"My Messages"} isActive={false} onClick={() => setActiveTab(1)} />
+                <div className="w-screen h-24 flex flex-row justify-start space-x-4 bg-slate-300">
+                    <Tab title={"Teacher Search"} onClick={() => setActiveTab(0)} />
+                    <Tab title={"My Messages"} onClick={() => setActiveTab(1)} />
                 </div>
                 <div>
                     {[<TeacherSearch key={0}/>][activeTab]}
