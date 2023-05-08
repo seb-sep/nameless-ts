@@ -29,14 +29,16 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({id, name, college}) => 
 
 const MessagePopup: React.FC<MessagePopupProps> = ({id, name, closeHandler}) => {
     const [content, setContent] = useState("");
+    const sendMessageMutation = api.messages.sendMessage.useMutation();
     const handleSubmit = () => {
-        api.messages.sendMessage.useMutation().mutate({teacherId: id, content: content});
+        console.log("Send message to teacher");
+        sendMessageMutation.mutate({ teacherId: id, content: content});
         setContent("");
         closeHandler();
     };
 
     return (
-        <div className="flex flex-col justify-around align-middle w-3/5 h-4/5 absolute left-1/2 top-1/2">
+        <div className="flex flex-col justify-around align-middle w-3/5 h-4/5 absolute left-1/4 top-1/4 border">
             <h1>Send a message to {name}</h1>
             <textarea value={content} onChange={e => setContent(e.target.value)}/>
             <button onClick={handleSubmit}>Submit Message</button>
