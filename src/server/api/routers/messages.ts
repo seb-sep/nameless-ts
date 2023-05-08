@@ -7,14 +7,14 @@ import type { SendEmailCommandInput } from "@aws-sdk/client-ses";
 
 
 const sendEmail = async (recipient: string, content: string) => {
-  if (!process.env.EMAIL_FROM || !process.env.AWS_ACCESS_KEY || !process.env.AWS_SECRET_KEY) {
+  if (!process.env.EMAIL_FROM || !process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_KEY_ID) {
     return {"Error": "Environment variables not set."};
   }
   const client = new SESClient({
     region: process.env.AWS_SERVER_REGION,
     credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY,
-      secretAccessKey: process.env.AWS_SECRET_KEY
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_KEY_ID
     }
   });
 
