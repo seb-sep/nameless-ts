@@ -18,7 +18,7 @@ export const TeacherCard: React.FC<TeacherCardProps> = ({id, name, college}) => 
     const [displayPopup, setDisplayPopup] = useState(false);
 
     return (
-        <div className="flex flex-col justify-around align-middle w-2/5 h-3/5">
+        <div className="flex flex-col justify-around align-middle w-2/5 h-3/5 border">
             <h1>{name}</h1>
             <h6>{college}</h6>
             <button onClick={() => setDisplayPopup(true)}>Send a message</button>
