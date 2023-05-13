@@ -2,6 +2,11 @@ import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 import type { SendEmailCommandInput } from "@aws-sdk/client-ses";
 import { TRPCError } from "@trpc/server";
 
+/**
+ * Send an email to a teacher through AWS SES with the given content.
+ * @param recipient the email of the teacher to send to
+ * @param content the content of the email
+ */
 export const sendEmail = async (recipient: string, content: string) => {
   if (!process.env.EMAIL_FROM || !process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_KEY_ID) {
     return {"Error": "Environment variables not set."};
