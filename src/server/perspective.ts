@@ -48,7 +48,7 @@ export async function analyzeText(text: string): Promise<boolean> {
           'Accept': 'application/json',
         },
         params: {
-          key: "AIzaSyCaHjRbD99EWrHOT5E60bV2bvWIQtlBL3k",
+          key: process.env.PERSPECTIVE_API_KEY,
         },
       }
     );
