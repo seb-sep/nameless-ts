@@ -9,7 +9,7 @@ export const TeacherSearch: React.FC = () => {
     
     const [searchTrigger, setSearchTrigger] = useState(0);
     const { data: teachers } = api.teachers.searchTeacher.useQuery({ content: searchText }, {
-        enabled: searchTrigger > 0, // only fetch data after the first trigger
+        enabled: searchTrigger > 0, 
     });
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchText(e.target.value);

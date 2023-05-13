@@ -76,6 +76,7 @@ model Message {
   teacher   Teacher @relation("TeacherToMessages", fields: [teacherId], references: [id])
   teacherId String
   content   String  @db.VarChar()
+  flagged   Boolean
 
   @@index([studentId])
 }
