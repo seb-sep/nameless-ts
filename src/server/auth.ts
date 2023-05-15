@@ -76,7 +76,11 @@ export const authOptions: NextAuthOptions = {
       from: process.env.EMAIL_FROM
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET
+  secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    maxAge: 7 * 24 * 60 * 60, // 1 week
+    updateAge: 24 * 60 * 60 // 24 hours
+  }
 };
 
 /**

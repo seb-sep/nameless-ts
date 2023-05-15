@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { sendEmail } from "../ses";
-import { analyzeText } from "~/server/perspective";
+import { analyzeText } from "../perspective";
 
 export const messagesRouter = createTRPCRouter({
   getStudentMessages: protectedProcedure.query(({ ctx }) => {

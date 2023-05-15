@@ -35,6 +35,9 @@ type perspectiveOutput = {
  * @returns true if any attributes such as TOXICITY return a summary score of >0.7, false if otherwise
  */
 export async function analyzeText(text: string): Promise<boolean> {
+  if (!process.env.PERSPECTIVE_API_KEY) {
+    throw new Error("No API key for Perspective");
+  }
   try {
     const response = await axios.post<perspectiveOutput>(
       PERSPECTIVE_API_URL,
@@ -55,10 +58,11 @@ export async function analyzeText(text: string): Promise<boolean> {
 
     const attrs = Object.values(response.data.attributeScores);
 
-    //Iterate through all attributes and check if any have a score of over
+    //Iterate through all attributes and check if any have a score of over 0.7
     return (attrs.filter((attr) => attr.summaryScore.value > 0.7).length > 0)  
     
   } catch (error) {
+    console.error(error);
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "Failed to analyze text"
