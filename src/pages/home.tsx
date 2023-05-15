@@ -9,10 +9,11 @@ import { MyMessages } from "~/components/MyMessages";
 type TabProps = {
     title: string;
     onClick: () => void;
+    isActive: boolean;
 }
-const Tab: React.FC<TabProps> = ({ title, onClick }) => {
+const Tab: React.FC<TabProps> = ({ title, onClick, isActive=false}) => {
     return (
-        <button onClick={onClick} className="underline underline-offset-8">
+        <button onClick={onClick} className={isActive ? "underline underline-offset-8" : ""}>
             {title}
         </button>   
     );
@@ -41,8 +42,8 @@ const Home: NextPage = () => {
                     </div>
                 </div>
                 <div className="w-screen h-24 flex flex-row justify-start space-x-4 bg-slate-300">
-                    <Tab title={"Teacher Search"} onClick={() => setActiveTab(0)} />
-                    <Tab title={"My Messages"} onClick={() => setActiveTab(1)} />
+                    <Tab title={"Teacher Search"} onClick={() => setActiveTab(0)} isActive={activeTab === 0}/>
+                    <Tab title={"My Messages"} onClick={() => setActiveTab(1)} isActive={activeTab === 1}/>
                 </div>
                 <div>
                     {[<TeacherSearch key={0}/>, <MyMessages key={1}/>][activeTab]}
