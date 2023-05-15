@@ -4,13 +4,13 @@ import { useRouter } from "next/router"
 
 import { signOut, useSession } from "next-auth/react";
 import { TeacherSearch } from "~/components/TeacherSearch"
+import { MyMessages } from "~/components/MyMessages";
 
-interface TabProps {
+type TabProps = {
     title: string;
     onClick: () => void;
 }
 const Tab: React.FC<TabProps> = ({ title, onClick }) => {
-
     return (
         <button onClick={onClick} className="underline underline-offset-8">
             {title}
@@ -26,7 +26,6 @@ const Home: NextPage = () => {
 
     useEffect(() => {
         if (status === "unauthenticated") {
-            console.log("Status unauthed");
             void router.push("/");
         }
     });
@@ -46,7 +45,7 @@ const Home: NextPage = () => {
                     <Tab title={"My Messages"} onClick={() => setActiveTab(1)} />
                 </div>
                 <div>
-                    {[<TeacherSearch key={0}/>][activeTab]}
+                    {[<TeacherSearch key={0}/>, <MyMessages key={1}/>][activeTab]}
                 </div>
             </main>
         );

@@ -9,7 +9,10 @@ export const messagesRouter = createTRPCRouter({
     return ctx.prisma.message.findMany({
       where: {
         studentId: ctx.session.user.id
-      }
+      },
+      include: {
+        teacher: true
+      },
     });
   }),
   
