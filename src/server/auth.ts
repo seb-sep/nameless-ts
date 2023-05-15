@@ -4,6 +4,7 @@ import {
   type NextAuthOptions,
   type DefaultSession,
 } from "next-auth";
+import { AdapterUser } from "next-auth/adapters";
 import EmailProvider from "next-auth/providers/email";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "~/server/db";
@@ -43,24 +44,16 @@ export const authOptions: NextAuthOptions = {
         id: user.id,
       },
     }),
-    /*async signIn({ user, account, profile, email, credentials }) {
-      console.log(user.email);
-      if (account?.provider === "email" && user.email) {
-        const existingUser = await prisma.studentUser.findUnique({
-          where: { email: user.email },
-        });
-
-        if (!existingUser) {
-          await prisma.studentUser.create({
-            data: {
-              email: user.email
-            }
-          })
-        }
+    signIn({ user, account, profile, email, credentials }) {
+      //Only need to verify for Northeastern emails on the first call for new account sign ins
+      if ("emailVerified" in user && email?.verificationRequest) {
+        console.log(user.email);
+        const neu_regex = /^[a-zA-Z]+.[a-zA-Z]+@(northeastern|husky.neu).edu$/
+        return neu_regex.test(user.email) ? true : "/login-bad-email";
+      } else {
+        return true;
       }
-
-      return true;
-    },*/
+    }
   },
   adapter: PrismaAdapter(prisma),
   providers: [
